@@ -8,7 +8,7 @@ export class ProductController {
     constructor( private productService: ProductService){} 
 
     @Post('/create')
-    async createPost(@Res() res, @Body() createProductDTO: CreateProductDTO) {
+    async createProduct(@Res() res, @Body() createProductDTO: CreateProductDTO) {
         const product = await this.productService.createProduct(createProductDTO)
         return res.status(HttpStatus.OK).json({
             message: "Product Succesfully Created",
@@ -27,9 +27,7 @@ export class ProductController {
     @Get('/:productID')
     async getProduct(@Res() res, @Param('productID') productID){
         const product = await this.productService.getProduct(productID)
-        if (!product) {
-            throw new NotFoundException('Product does not exists')
-        }
+        if (!product) throw new NotFoundException('Product does not exists')
         return res.status(HttpStatus.OK).json(product)
     }
 }
