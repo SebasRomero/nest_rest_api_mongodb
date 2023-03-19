@@ -19,12 +19,15 @@ export class ProductService {
         return product
     }
 
-    createProduct() {
-
+    createProduct(createProductDTO: CreateProductDTO): Promise<Product> {
+        const product =  new this.productModel(createProductDTO);
+        return product.save()
     }
 
-    deleteProduct() {
-        
+    async deleteProduct(productID: string): Promise<Product> {
+        const deletedProduct = await this.productModel.findByIdAndDelete(productID);
+        return deletedProduct
+
     }
 
 }
