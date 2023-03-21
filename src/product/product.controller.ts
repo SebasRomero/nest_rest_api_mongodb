@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, NotFoundException, Param, Post, Res, Delete, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, NotFoundException, Param, Post, Res, Delete, Query, Put } from '@nestjs/common';
 import { CreateProductDTO } from "./dto/product.dto";
 import { ProductService } from "./product.service";
 
@@ -33,8 +33,21 @@ export class ProductController {
 
     @Delete('/delete')
     async deleteProduct(@Res() res, @Query('productID') productID) {
-        const product = await this.productService.deleteProduct(productID)
-        if (!product) throw new NotFoundException('Product does not exists')
-        return res.status(HttpStatus.OK).json(product) 
+        const productDeleted = await this.productService.deleteProduct(productID)
+        if (!productDeleted) throw new NotFoundException('Product does not exists')
+        return res.status(HttpStatus.OK).json({
+            message: 'Product deleted succesfully',
+            productDeleted
+        }) 
     }
-}
+
+    @Put('/update')
+    async updateProduct(@Res() res, @Body() createProductDTO: CreateProductDTO, @Query('productID') productID) {
+        const updatedProduct = await this.productService.updateProduct(productID, createProductDTO)
+        if (!updatedProduct) throw new NotFoundException('Product does not exists')
+        return res.status(HttpStatus.OK).json({
+            message: 'Product updated succesfully',
+            updatedProduct
+        }) 
+    }
+    }
